@@ -1,0 +1,36 @@
+{
+    "users": [
+        {
+            "Name": "John Doe",
+            "Email": "john.doe@example.com"
+        },
+        {
+            "Name": "Emma Smith",
+            "Email": "emma.smith@example.com"
+        },
+        {
+            "Name": "Liam Jones",
+            "Email": "liam.jones@example.com"
+        },
+        {
+            "Name": "Sophia Brown",
+            "Email": "sophia.brown@example.com"
+        },
+        {
+            "Name": "Lorena",
+            "Email": "lorena@gmail.com"
+        },
+        {
+            "Name": "Caio",
+            "Email": "caio@gmail.com"
+        },
+        {
+            "Name": "kira",
+            "Email": "kira@gmail.com"
+        },
+        {
+            "Name": "Caio",
+            "Email": "caio@gmail.com.au"
+        }
+    ]
+}
