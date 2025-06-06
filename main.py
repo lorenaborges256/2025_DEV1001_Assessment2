@@ -4,6 +4,8 @@ from user_auth import UserAuth
 from customer_request import CustomerRequest
 from notifier import send_email_notification
 
+# App Header
+
 # Authenticate user
 auth = UserAuth()
 name, email = auth.login_or_register()
@@ -43,7 +45,7 @@ def check_product_stock():
         next_action = input("\nWould you like to check another product? (Yes/Exit): ").strip().lower()
         if next_action == "exit":
             print("\n🔔 Checking for stock updates before exit...")
-            stock_monitor.check_stock_updates()  # Check for stock updates one last time
+            stock_monitor.monitor_stock()  # Check for stock updates one last time
             print("📩 Sending pending notifications...")
             send_email_notification(email, product)  # Send email if stock was updated
             print("✅ All pending notifications sent. Goodbye!")

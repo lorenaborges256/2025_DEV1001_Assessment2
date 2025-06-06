@@ -60,6 +60,6 @@ class Notifier:
 
 # Function for `stock_monitor.py`
 def send_email_notification(email, product):
-    """Send a quick email notification without requiring user name."""
+    """Send a quick email notification when stock updates."""
     notifier = Notifier()
     notifier.send_email("Customer", email, product)

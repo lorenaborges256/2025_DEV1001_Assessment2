@@ -1,4 +1,4 @@
-Shampoo,10
+Shampoo,1
 Conditioner,1
-Mask,0
+Mask,1
 Curl Cream,8
