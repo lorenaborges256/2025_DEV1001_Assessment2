@@ -41,7 +41,7 @@ class Notifier:
             print(f"🔔 Email already sent to {email} for {product}. Skipping...")
             return
 
-        msg = MIMEText(f"Hello {name},\n\nGood news! {product} is back in stock. Get it now before it’s gone!")
+        msg = MIMEText(f"Hello {name},\n\n Good news! {product} is back in stock. Get it now before it’s gone!")
         msg["Subject"] = f"{product} is back in stock!"
         msg["From"] = self.smtp_credentials.get("USERNAME")
         msg["To"] = email
@@ -57,9 +57,3 @@ class Notifier:
             self.save_sent_notifications()
         except Exception as e:
             print(f"❌ Failed to send email to {email}: {e}")
-
-# Function for `stock_monitor.py`
-def send_email_notification(email, product):
-    """Send a quick email notification when stock updates."""
-    notifier = Notifier()
-    notifier.send_email("Customer", email, product)

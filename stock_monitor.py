@@ -1,13 +1,19 @@
 import json
 import time
 from stock_checker import StockChecker
-from notifier import send_email_notification
+from notifier import Notifier
 
 class StockMonitor:
     def __init__(self, stock_file="stock.txt", notifications_file="notifications.json"):
         self.stock_checker = StockChecker(stock_file)
         self.notifications_file = notifications_file
         self.previous_stock = self.stock_checker.stock_data  # Store initial stock levels
+
+    def send_email_notification(self, email, product):
+        """Send an email notification only if stock has been updated."""
+        notifier = Notifier()
+        notifier.send_email("Customer", email, product)
+        print(f"📧 Notification sent to {email} for {product}.")
 
     def check_stock_updates(self):
         """Waits for stock to change from 0 → positive before sending notifications."""
@@ -28,34 +34,37 @@ class StockMonitor:
             product = request["product"]
             email = request["email"]
 
-            # Trigger notification only when stock increases from 0 → positive
-            if product in self.previous_stock and self.previous_stock[product] == 0 and current_stock.get(product, 0) > 0:
+            stock_updated = product in self.previous_stock and self.previous_stock[product] == 0 and current_stock.get(product, 0) > 0
+            if stock_updated:
                 updated_products.append((product, email))
 
         if updated_products:
-            # print(f"✅ Stock update detected for: {updated_products}")
             for product, email in updated_products:
-                send_email_notification(email, product)
+                self.send_email_notification(email, product)  # Call the method within the class
                 print(f"📩 Sent notification for {product} to {email}")
 
-            # Remove notified requests from `notifications.json`
             pending_notifications = [req for req in pending_notifications if req["product"] not in current_stock or current_stock[req["product"]] == 0]
 
             with open(self.notifications_file, "w") as file:
                 json.dump(pending_notifications, file, indent=4)
 
-            # print("🛑 Stock update processed. Stopping monitoring.")
             return True  # Stop monitoring once stock updates
 
         print("⚠ No stock updates detected. Continuing to monitor...")
-        self.previous_stock = current_stock  # Update stored stock data
+        self.previous_stock = current_stock
         return False  # Keep monitoring
 
-    def monitor_stock(self, interval=10):
-        """Monitor stock until an update occurs, then stop."""
+    def monitor_stock(self, interval=10, timeout=20):
+        """Monitor stock until an update occurs or timeout is reached."""
         print("🚀 Stock monitoring started... Checking every 10 seconds.")
-        
+        start_time = time.time()
+
         while True:
             if self.check_stock_updates():
-                break  # Stop monitoring once a stock update is detected
+                break
+
+            if time.time() - start_time >= timeout:
+                print("⏳ No stock update detected within 20 seconds. Stopping monitoring.")
+                break
+
             time.sleep(interval)

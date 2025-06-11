@@ -2,9 +2,11 @@ from stock_checker import StockChecker
 from stock_monitor import StockMonitor
 from user_auth import UserAuth
 from customer_request import CustomerRequest
-from notifier import send_email_notification
+from header import Header
 
 # App Header
+header = Header()
+header.display_welcome()
 
 # Authenticate user
 auth = UserAuth()
@@ -44,11 +46,11 @@ def check_product_stock():
 
         next_action = input("\nWould you like to check another product? (Yes/Exit): ").strip().lower()
         if next_action == "exit":
-            print("\n🔔 Checking for stock updates before exit...")
+            print("\n🔔 Client/User is not viewing this and the following messages. \n For test purpose it is time to manually update stock.txt to receive stock. Keep stock.txt as it is and update only its stock number...")
             stock_monitor.monitor_stock()  # Check for stock updates one last time
             print("📩 Sending pending notifications...")
-            send_email_notification(email, product)  # Send email if stock was updated
-            print("✅ All pending notifications sent. Goodbye!")
+            stock_monitor.send_email_notification(email, product)  # Send email if stock was updated
+            print("✅ All pending notifications sent! Check your email for updates.")
             break
 
 # Start product stock check loop
