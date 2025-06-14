@@ -12,14 +12,13 @@ class StockMonitor:
     def send_email_notification(self, email, product):
         """Send an email notification only if stock has been updated."""
         notifier = Notifier()
-        notifier.send_email("Customer", email, product)
-        print(f"📧 Notification sent to {email} for {product}.")
+        notifier.send_email( "Customer", email, product)
+        # print(f"📧 Notification sent to {email} for {product}.")
 
     def check_stock_updates(self):
-        """Waits for stock to change from 0 → positive before sending notifications."""
-        print("🔍 Checking stock updates...")
-
-        current_stock = self.stock_checker.check_stock()
+        """Checks for stock updates, but only sends notifications if stock changes."""
+        self.stock_checker.refresh_stock()  # Ensure fresh data before checking updates
+        current_stock = self.stock_checker.stock_data  # Use refreshed stock data
         print(f"📦 Current stock levels: {current_stock}")
 
         try:
@@ -34,25 +33,37 @@ class StockMonitor:
             product = request["product"]
             email = request["email"]
 
-            stock_updated = product in self.previous_stock and self.previous_stock[product] == 0 and current_stock.get(product, 0) > 0
+            stock_updated = (
+                product in self.previous_stock
+                and self.previous_stock[product] == 0
+                and current_stock.get(product, 0) > 0
+            )
+
             if stock_updated:
                 updated_products.append((product, email))
 
         if updated_products:
             for product, email in updated_products:
-                self.send_email_notification(email, product)  # Call the method within the class
-                print(f"📩 Sent notification for {product} to {email}")
+                print(f"✅ Stock updated for {product}! Sending notification to {email}.")
+                self.send_email_notification(email, product)
 
-            pending_notifications = [req for req in pending_notifications if req["product"] not in current_stock or current_stock[req["product"]] == 0]
+
+            # Remove only successfully updated products from pending notifications
+            pending_notifications = [
+                req for req in pending_notifications
+                if req["product"] in current_stock and current_stock[req["product"]] == 0
+            ]
 
             with open(self.notifications_file, "w") as file:
                 json.dump(pending_notifications, file, indent=4)
 
+            self.previous_stock = current_stock  # Update tracking reference
             return True  # Stop monitoring once stock updates
 
         print("⚠ No stock updates detected. Continuing to monitor...")
-        self.previous_stock = current_stock
+        self.previous_stock = current_stock  # Update tracking reference
         return False  # Keep monitoring
+
 
     def monitor_stock(self, interval=10, timeout=20):
         """Monitor stock until an update occurs or timeout is reached."""
@@ -60,11 +71,16 @@ class StockMonitor:
         start_time = time.time()
 
         while True:
-            if self.check_stock_updates():
-                break
+            self.stock_checker.refresh_stock()  # Refresh stock before checking
+            stock_updated = self.check_stock_updates()  # Check if stock changed
+
+            if stock_updated:
+                """Stock updated! Exiting monitoring."""
+                return True  # Stop monitoring when stock update occurs
 
             if time.time() - start_time >= timeout:
-                print("⏳ No stock update detected within 20 seconds. Stopping monitoring.")
-                break
+                print("⏳ Timeout reached. No stock update detected.")
+                return False  # Timeout reached, no update
 
+            print("⏳ Monitoring continues... Waiting for stock update.")
             time.sleep(interval)

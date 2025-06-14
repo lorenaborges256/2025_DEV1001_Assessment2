@@ -18,10 +18,17 @@ class StockChecker:
                 product, quantity = product.strip().lower(), quantity.strip()
                 stock_data[product] = int(quantity)
         return stock_data
+    
+    def refresh_stock(self):
+        """Reload stock data from file to reflect real-time updates."""
+        logging.info("Refreshing stock data...")
+        self.stock_data = self.check_stock()
+
+
 
     def validate_product(self, product_name):
         """Check if the given product exists in stock data."""
         if product_name not in self.stock_data:
-            logging.warning(f"🚨 Invalid product name entered: {product_name}")
+            logging.warning(f"🚨 Invalid product name entered: {product_name}. Choose one product from the list above.")
             return False  # Product does not exist
         return True  # Product exists
