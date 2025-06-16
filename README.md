@@ -5,13 +5,13 @@
 This app will notify you by email when a product or more are back in stock.
 
 
-To make it works it will check the stock level it send an email to the customer who wants to be notified when the desire product will be back in stock.
+To make it works it will check the stock level and sends an email to the customer who wants to be notified when the desire product will be back in stock.
 
 First it will require the account login, or create account.
 if your email is still on our data, your account won't be created, but it will request you to login.
 
 Our App will show the user, our products list, and they need to choose one to see if there is stock available to proceed to place your order. This app won't allow the user to place an order, it will be a future development. 
-If a product is out of stock, stock = 0, user will be asked if they want to be notified when it is back in stock, if yes the user email will be added on a list.
+If a product is out of stock, stock = 0, user will be asked if they allow us to use thier email to notify them when the product is back in stock, if yes the user email will be added on a list.
 App will ask the user if they want to check other product stock. If Yes, it will open the same menu as before, if not user will be requested to exit program.
 Here ends our User interface. Our user will finish their app interation when they end check the stock and exit app.
 
@@ -58,8 +58,7 @@ Use import smtplib and from email.mime.text import MIMEText to send email to the
 # functions
 ## print_header
 
-use pip list to see all packages install in this app
-Maybe here will have something about privice https://policies.python.org/pypi.org/Terms-of-Service/ 
+
 
 # Libraries
 ## import logging
@@ -70,3 +69,6 @@ Maybe here will have something about privice https://policies.python.org/pypi.or
 ## import json
 ## import os
 ## import re
+
+use pip list to see all packages install in this app
+Maybe here will have something about privice https://policies.python.org/pypi.org/Terms-of-Service/ 

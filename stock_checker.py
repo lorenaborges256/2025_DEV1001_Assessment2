@@ -24,8 +24,6 @@ class StockChecker:
         logging.info("Refreshing stock data...")
         self.stock_data = self.check_stock()
 
-
-
     def validate_product(self, product_name):
         """Check if the given product exists in stock data."""
         if product_name not in self.stock_data:

@@ -13,7 +13,6 @@ class StockMonitor:
         """Send an email notification only if stock has been updated."""
         notifier = Notifier()
         notifier.send_email( "Customer", email, product)
-        # print(f"📧 Notification sent to {email} for {product}.")
 
     def check_stock_updates(self):
         """Checks for stock updates, but only sends notifications if stock changes."""
@@ -44,8 +43,7 @@ class StockMonitor:
 
         if updated_products:
             for product, email in updated_products:
-                print(f"✅ Stock updated for {product}! Sending notification to {email}.")
-                self.send_email_notification(email, product)
+                print(f"\n Stock updated for {product}! Sending notification to {email}.")
 
 
             # Remove only successfully updated products from pending notifications

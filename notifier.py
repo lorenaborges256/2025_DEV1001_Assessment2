@@ -37,10 +37,6 @@ class Notifier:
         """Send an email notification using stored credentials."""
         email_key = f"{email}:{product}"
 
-        # if email_key in self.sent_notifications:
-        #     print(f"🔔 Email already sent to {email} for {product}. Skipping...")
-        #     return
-
         msg = MIMEText(f"Hello {name},\n\n Good news! {product} is back in stock. Get it now before it’s gone!")
         msg["Subject"] = f"{product} is back in stock!"
         msg["From"] = self.smtp_credentials.get("USERNAME")
@@ -52,7 +48,7 @@ class Notifier:
                 server.login(self.smtp_credentials.get("USERNAME"), self.smtp_credentials.get("PASSWORD"))
                 server.sendmail(msg["From"], [msg["To"]], msg.as_string())
 
-            print(f"📩 !!!! Email successfully sent to {name} ({email}) for {product}.")
+            print(f"📩 Email successfully sent to {name} ({email}) for {product}.")
             self.sent_notifications[email_key] = True  # Track sent emails
             self.save_sent_notifications()
         except Exception as e:
