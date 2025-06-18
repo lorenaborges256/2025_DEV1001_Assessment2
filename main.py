@@ -42,13 +42,13 @@ def main():
         # Check stock availability
         if stock_data[product] > 0:
             print(
-                f"✅ {product} is in stock! Quantity: {stock_data[product]}. \nTalk with one of our seller on store floor and they will help you to proceed with your order."
+                f"✅ {product} is in stock! Quantity: {stock_data[product]}. \nSpeak with one of our sales representatives on store floor and they will help you with your purchase."
             )
         else:
             print(f"\n❌ Sorry, {product} is out of stock.")
             notify = (
                 input(
-                    "\nWould you allow us to use your email to notify you when it's back in stock? (Yes/No): "
+                    "\nWould you give us consent to email you to notify when the product is back in stock? (Yes/No): "
                 )
                 .strip()
                 .lower()

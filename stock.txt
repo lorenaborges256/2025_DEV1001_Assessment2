@@ -1,6 +1,6 @@
 Shampoo,1
 Conditioner,1
-Mask,10
+Mask,0
 Curl Cream,8
 Oil,1
 Kids products,1

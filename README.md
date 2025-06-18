@@ -75,7 +75,7 @@ pip install -r requirements-dev.txt  # Only if you're developing
 
 ### 2. Launch App
 ```bash
-python main.py
+python3 main.py
 ```
 ### 3. Register / Log In
 - New users: enter your name and email
