@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+
 class CustomerRequest:
     def __init__(self, name, email, product):
         self.name = name
@@ -14,9 +15,13 @@ class CustomerRequest:
         try:
             with open(filename, "w") as file:
                 json.dump([], file, indent=4)  # Overwrite file with an empty list
-            print("\n🛠️ -- Message for testing purposes only — hidden from the user. Notifications.json has been reset! All previous requests have been cleared.")
+            print(
+                # "\n🛠️ -- Message for testing purposes only — hidden from the user. Notifications.json has been reset! All previous requests have been cleared."
+            )
         except Exception as e:
-            print(f"\n🛠️ -- Message for testing purposes only — hidden from the user. ❌ Error resetting notifications: {e}")
+            print(
+                # f"\n🛠️ -- Message for testing purposes only — hidden from the user. ❌ Error resetting notifications: {e}"
+            )
 
     def save_to_file(self, filename="notifications.json"):
         """Save user requests while preventing duplicates and keeping data structured."""
@@ -30,11 +35,14 @@ class CustomerRequest:
             "name": self.name,
             "email": self.email,
             "product": self.product,
-            "timestamp": self.timestamp
+            "timestamp": self.timestamp,
         }
 
         # Check if a duplicate request already exists before adding
-        if not any(req["email"] == self.email and req["product"] == self.product for req in requests):
+        if not any(
+            req["email"] == self.email and req["product"] == self.product
+            for req in requests
+        ):
             requests.append(new_request)
 
             with open(filename, "w") as file:
@@ -42,4 +50,6 @@ class CustomerRequest:
 
             print(f"📩 Notification request saved for {self.product}!")
         else:
-            print(f"🔔You already requested a notification for {self.product}. No duplicate requests allowed.")
+            print(
+                f"🔔You already requested a notification for {self.product}. No duplicate requests allowed."
+            )

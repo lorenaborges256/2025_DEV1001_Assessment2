@@ -3,16 +3,19 @@ import time
 from stock_checker import StockChecker
 from notifier import Notifier
 
+
 class StockMonitor:
     def __init__(self, stock_file="stock.txt", notifications_file="notifications.json"):
         self.stock_checker = StockChecker(stock_file)
         self.notifications_file = notifications_file
-        self.previous_stock = self.stock_checker.stock_data  # Store initial stock levels
+        self.previous_stock = (
+            self.stock_checker.stock_data
+        )  # Store initial stock levels
 
     def send_email_notification(self, email, product):
         """Send an email notification only if stock has been updated."""
         notifier = Notifier()
-        notifier.send_email( "Customer", email, product)
+        notifier.send_email("Customer", email, product)
 
     def check_stock_updates(self):
         """Checks for stock updates, but only sends notifications if stock changes."""
@@ -43,13 +46,16 @@ class StockMonitor:
 
         if updated_products:
             for product, email in updated_products:
-                print(f"\n Stock updated for {product}! Sending notification to {email}.")
-
+                print(
+                    f"\n Stock updated for {product}! Sending notification to {email}."
+                )
 
             # Remove only successfully updated products from pending notifications
             pending_notifications = [
-                req for req in pending_notifications
-                if req["product"] in current_stock and current_stock[req["product"]] == 0
+                req
+                for req in pending_notifications
+                if req["product"] in current_stock
+                and current_stock[req["product"]] == 0
             ]
 
             with open(self.notifications_file, "w") as file:
@@ -61,7 +67,6 @@ class StockMonitor:
         print("⚠ No stock updates detected. Continuing to monitor...")
         self.previous_stock = current_stock  # Update tracking reference
         return False  # Keep monitoring
-
 
     def monitor_stock(self, interval=10, timeout=20):
         """Monitor stock until an update occurs or timeout is reached."""
@@ -77,7 +82,6 @@ class StockMonitor:
                 return True  # Stop monitoring when stock update occurs
 
             if time.time() - start_time >= timeout:
-                print("⏳ Timeout reached. No stock update detected.")
                 return False  # Timeout reached, no update
 
             print("⏳ Monitoring continues... Waiting for stock update.")

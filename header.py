@@ -1,8 +1,9 @@
 from datetime import datetime
 
+
 class Header:
     def __init__(self):
-        self.app_name = "Stock Notifier CLI"
+        self.app_name = "Notify Me CLI Application"
         self.version = "1.0 June 2025"
         self.description = (
             "This app notifies you via email when a product is back in stock.\n"
@@ -13,7 +14,7 @@ class Header:
             f"\n📦 Welcome to {self.app_name} (Version {self.version})!\n"
             f"\n"
             f"{self.description}\n"
-             f"\n"
+            f"\n"
             f">> Current session started at: {self.timestamp}\n"
         )
 

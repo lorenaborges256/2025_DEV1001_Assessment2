@@ -2,8 +2,13 @@ import smtplib
 import json
 from email.mime.text import MIMEText
 
+
 class Notifier:
-    def __init__(self, sent_notifications_file="sent_notifications.json", credentials_file="credentials.txt"):
+    def __init__(
+        self,
+        sent_notifications_file="sent_notifications.json",
+        credentials_file="credentials.txt",
+    ):
         self.sent_notifications_file = sent_notifications_file
         self.sent_notifications = self.load_sent_notifications()
         self.smtp_credentials = self.load_credentials(credentials_file)
@@ -37,15 +42,23 @@ class Notifier:
         """Send an email notification using stored credentials."""
         email_key = f"{email}:{product}"
 
-        msg = MIMEText(f"Hello {name},\n\n Good news! {product} is back in stock. Get it now before it’s gone!")
+        msg = MIMEText(
+            f"Hello {name},\n\n Good news! {product} is back in stock. Get it now before it’s gone!"
+        )
         msg["Subject"] = f"{product} is back in stock!"
         msg["From"] = self.smtp_credentials.get("USERNAME")
         msg["To"] = email
 
         try:
-            with smtplib.SMTP(self.smtp_credentials.get("SMTP_SERVER"), int(self.smtp_credentials.get("SMTP_PORT"))) as server:
+            with smtplib.SMTP(
+                self.smtp_credentials.get("SMTP_SERVER"),
+                int(self.smtp_credentials.get("SMTP_PORT")),
+            ) as server:
                 server.starttls()
-                server.login(self.smtp_credentials.get("USERNAME"), self.smtp_credentials.get("PASSWORD"))
+                server.login(
+                    self.smtp_credentials.get("USERNAME"),
+                    self.smtp_credentials.get("PASSWORD"),
+                )
                 server.sendmail(msg["From"], [msg["To"]], msg.as_string())
 
             print(f"📩 Email successfully sent to {name} ({email}) for {product}.")

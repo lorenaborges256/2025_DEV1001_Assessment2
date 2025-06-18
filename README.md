@@ -1,74 +1,101 @@
-# Notify Me Application
+# Notify Me CLI Application
+
+[![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-prototype-orange.svg)]()
+[![Platform](https://img.shields.io/badge/platform-CLI-lightgrey.svg)]()
+![Made with Cowsay](https://img.shields.io/badge/made%20with-cowsay-ff69b4?style=flat-square&logo=gnu&logoColor=white)
 
 ## Overview
 
-This app will notify you by email when a product or more are back in stock.
+The **Notify Me CLI Application** simulates a "Notify Me" feature commonly used in online stores. Users can register, browse available products, and request email notifications when out-of-stock items become available again.
+
+This CLI tool is built for rapid testing and demonstrates the potential architecture and logic behind future live-inventory integrations with web platforms. Built as a prototype for future integration with e-commerce platforms.
 
 
-To make it works it will check the stock level and sends an email to the customer who wants to be notified when the desire product will be back in stock.
+## Features
 
-First it will require the account login, or create account.
-if your email is still on our data, your account won't be created, but it will request you to login.
+- **User Account System**
+  - Register with name and email (validated using RegEx)
+  - Existing account lookup via `users.json`
 
-Our App will show the user, our products list, and they need to choose one to see if there is stock available to proceed to place your order. This app won't allow the user to place an order, it will be a future development. 
-If a product is out of stock, stock = 0, user will be asked if they allow us to use thier email to notify them when the product is back in stock, if yes the user email will be added on a list.
-App will ask the user if they want to check other product stock. If Yes, it will open the same menu as before, if not user will be requested to exit program.
-Here ends our User interface. Our user will finish their app interation when they end check the stock and exit app.
+- **Stock Interaction**
+  - Add or delete products from `stock.txt`
+  - View the current product list at any time
+  - Manually update product stock
 
+- **Email Notification**
+  - Opt-in to receive email alerts when products are restocked
+  - Emails sent using Gmail SMTP; credentials stored in `credentials.txt` (ignored by version control)
 
-On background, read these as "time is passing and things are happening".
-
-for app test propose the message: ("\n🔔 Checking stock updates...") will be showing on screen, but it is a backgound work, user should not see that.
-Our app continue checking stock level. stock_monitor.py
-When product is back in stock (manually I edit stock.txt) notifier.py will send one email, per product desired, to the client/user, informing that product is back in stock, so they can place their order.
-
-If it is a valid email it will be sent, it is not a valid email error message will be shown.
-
-How to test and make sure client/user will receive a Notify-me email:
-- stock.txt should have "str,int" caractheristcs, one product per line. And before starts app edit stock.txt writing at least one of those products with zero stock, You can add as many products with its stock you want, it will be seing on menu after login or account creation.
-- create a account with a valid email, so you will receive it saying your product is back in stock.
+- **Session Monitoring**
+  - Background stock monitor activates upon app exit
+  - Ends when timeout occurs or product is back in stock
+  - Logs refreshed per session via `sent_notifications.json`
 
 
-# Class
-## class UserAuth:
-store name and email on user.json to check if user already exist, if email is in database user needs to login and not create a account. Also check if email is a valid email.
-VALID EMAIL:
-- test.email@example.com
-- user123@sub.domain.org
-- name+alias@email.net
-- firstname.lastname@email.co.uk
+## Developer Notes
 
-INVALID EMAILS
-- plainaddress (Missing '@' and domain)
-- @missingusername.com (No username before '@')
-- username@.com (Domain name can't start with a dot)
-- user@domain..com (Consecutive dots in domain are not allowed)
-
-## class CustomerRequest:
-store name, email and product requested to be informed. And make sure there is only one request per product per client. When client login or create a account the notifications.json is reset.
-## class StockChecker:
-20250606 at this moment: it makes sure the stock.txt is a valid data file. Also check is user type only products from the list, if not it shows a error message.
-## class StockMonitor
-20250606 After user ends to check stock and exit app, stock_monitor starts check every 10 seconds (to give time to manually change stock.txt) if a product change its stock from 0 to a positive value. If yes and a user request to be notified about that product it triggers next class Notifier to send email to this user.
-and it stops to monitor
-## class Notifier:
-Use import smtplib and from email.mime.text import MIMEText to send email to the user. with a Subject and email content.
+- **Language:** Python 3.x  
+- **Modules:** `re`, `json`, `os`, `time`, `smtplib`, `email.mime`: All standard Python library modules. 
+- **Data Persistence:** Uses `.json` and `.txt` files for lightweight storage  
+- **Security Notes:**  
+  - `credentials.txt` contains plaintext Gmail login (should be secured in future versions)
+  - Ensure `.gitignore` excludes sensitive files
 
 
-# functions
-## print_header
+## License
+
+This project is licensed under the **MIT License**.
+You're free to use, modify, and distribute this software with attribution. See the [`LICENSE`](LICENSE) file for details.
+All standard Python library modules, such as `re`, `json`, `os`, `time`, `smtplib`, and `email.mime`, are upon of Python Software Foundation License (PSFL). Legal/Ethical Impact: Open source and permissive. You're free to use, modify, and distribute without restrictions. Ethically safe—commonly used in Python projects.
+
+Files such as `users.json`, `notifications.json`, `sent_notifications.json`, and `credentials.txt`, may have personal data, it needs to comply with Australian Privacy Act or GDPR, especially regarding user consent and data handling. They should never be shared, due to privacy and security risks.
+
+## Setup:
+1. Get the Project Files – Download or clone the repository to your computer.
+2. Open the Project Directory – Use the terminal to move into the project's folder:
+```bash
+cd path/to/project
+```
+3. Install Dependencies – Install all required packages listed in requirements.txt:
+```bash
+pip install -r requirements.txt
+pip install -r requirements-dev.txt  # Only if you're developing
+```
+4. You are ready to start the Application 
+
+## How to use - TESTING GUIDE
+
+### 1. Manage Products Stock
+- Add/Delete items in `stock.txt` with correct format BEFORE launch the App. 
+- Make sure that at least one product has 0 (zero) units in stock, for notification test.
+- Full stock list will be shown when App launched.
 
 
+### 2. Launch App
+```bash
+python main.py
+```
+### 3. Register / Log In
+- New users: enter your name and email
+- Existing users: email is checked against users.json
 
-# Libraries
-## import logging
-## import smtplib
-## import cowsay
-## import schedule
-## import time
-## import json
-## import os
-## import re
+### 4. Opt-In for Notifications
+- Select products you want alerts for when restocked
+- Answer if you give the app permission to use your email to send you a notification
 
-use pip list to see all packages install in this app
-Maybe here will have something about privice https://policies.python.org/pypi.org/Terms-of-Service/ 
+### 5. Exit to Monitor
+- Exit the App when finish your research
+- On exit, the app runs a monitor script to check for stock updates
+- Following the prompt, update manually products stock in `stock.txt` to trigger notifications.
+- Emails will be sent
+
+---
+
+## Future Vision
+In future versions, this app will:
+- Integrate directly with e-commerce product inventory APIs
+- Embed into live product pages with a "Notify Me" button
+- Collect and sync customer profiles from the store database
+- Monitor inventory in real-time and scale alerts across multiple products
